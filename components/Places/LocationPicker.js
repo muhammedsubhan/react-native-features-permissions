@@ -62,6 +62,7 @@ const LocationPicker = ({ onPickLocation }) => {
     const location = await getCurrentPositionAsync();
     setPickedLocation(location);
   };
+
   const pickOnMapHandler = () => {
     navigation.navigate("Map");
   };

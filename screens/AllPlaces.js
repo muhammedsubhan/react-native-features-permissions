@@ -7,10 +7,20 @@ const AllPlaces = ({ route }) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused && route.params) {
-      setLoadedPlaces((currPlaces) => [...currPlaces, route.params.place]);
+    if (isFocused && route.params && route.params.place) {
+      const newPlace = route.params.place;
+
+      // Check if the new place is already in the loadedPlaces array
+      const isAlreadyAdded = loadedPlaces.some(
+        (place) => place.id === newPlace.id
+      );
+
+      if (!isAlreadyAdded) {
+        // Add the new place only if it's not already in the list
+        setLoadedPlaces((currPlaces) => [...currPlaces, newPlace]);
+      }
     }
-  }, [isFocused, route]);
+  }, [isFocused, route, loadedPlaces]);
 
   return <PlacesList places={loadedPlaces} />;
 };
