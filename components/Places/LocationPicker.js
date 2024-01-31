@@ -1,17 +1,40 @@
-import { Alert, Button, StyleSheet, View } from "react-native";
+import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import { Colors } from "../../constants/colors";
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,
   PermissionStatus,
 } from "expo-location";
-import { useNavigation } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { useEffect, useState } from "react";
 
-const LocationPicker = () => {
+const LocationPicker = ({ onPickLocation }) => {
   const [locationPermissionInfo, requestPermission] =
     useForegroundPermissions();
 
+  const [pickedLocation, setPickedLocation] = useState();
+
   const navigation = useNavigation();
+  const route = useRoute();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    onPickLocation(pickedLocation);
+  }, [pickedLocation, onPickLocation]);
+
+  useEffect(() => {
+    if (isFocused && route.params) {
+      const mapPickedLocation = {
+        lat: route.params.pickedLat,
+        lng: route.params.pickedLng,
+      };
+      setPickedLocation(mapPickedLocation);
+    }
+  }, [isFocused, route]);
 
   const verifyPermission = async () => {
     if (locationPermissionInfo.status === PermissionStatus.UNDETERMINED) {
@@ -37,15 +60,22 @@ const LocationPicker = () => {
     }
 
     const location = await getCurrentPositionAsync();
-    console.log(location);
+    setPickedLocation(location);
   };
   const pickOnMapHandler = () => {
     navigation.navigate("Map");
   };
+
+  let mapPreview = <Text>No location picked yet.</Text>;
+
+  if (pickedLocation) {
+    mapPreview = <Text>Location is Picked.(i dont have map)</Text>;
+  }
+
   return (
     <>
       <View>
-        <View style={Styles.mapPreview}></View>
+        <View style={Styles.mapPreview}>{mapPreview}</View>
         <View style={Styles.actions}>
           <Button title="Locate User" onPress={getLocationHandler} />
           <Button title="Pick on Map" onPress={pickOnMapHandler} />

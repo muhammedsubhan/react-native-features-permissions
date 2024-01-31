@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Alert, Button, Image, StyleSheet, Text, View } from "react-native";
 import { Colors } from "../../constants/colors";
 
-const ImagePicker = () => {
+const ImagePicker = ({ onTakenImage }) => {
   const [cameraPermissionInfo, requestPermission] = useCameraPermissions();
   const [pickedImage, setPickedImage] = useState({});
   const verifyPermission = async () => {
@@ -39,6 +39,7 @@ const ImagePicker = () => {
       quality: 0.5,
     });
     setPickedImage(image.assets[0]);
+    onTakenImage(image.assets[0]);
   };
 
   let imagePreview = <Text>No image taken yet.</Text>;
