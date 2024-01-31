@@ -5,10 +5,13 @@ import {
   useForegroundPermissions,
   PermissionStatus,
 } from "expo-location";
+import { useNavigation } from "@react-navigation/native";
 
 const LocationPicker = () => {
   const [locationPermissionInfo, requestPermission] =
     useForegroundPermissions();
+
+  const navigation = useNavigation();
 
   const verifyPermission = async () => {
     if (locationPermissionInfo.status === PermissionStatus.UNDETERMINED) {
@@ -36,7 +39,9 @@ const LocationPicker = () => {
     const location = await getCurrentPositionAsync();
     console.log(location);
   };
-  const pickOnMapHandler = () => {};
+  const pickOnMapHandler = () => {
+    navigation.navigate("Map");
+  };
   return (
     <>
       <View>
