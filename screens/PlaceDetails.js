@@ -14,15 +14,18 @@ const PlaceDetails = ({ route, navigation }) => {
   const selectedPlaceId = route.params.placeId;
   const AllPlacesItem = route.params.AllPlaces;
 
-  const showOnMapHandler = () => {};
+  const showOnMapHandler = () => {
+    navigation.navigate("Map", {
+      initialLat: selectedItem.location.lat,
+      initialLng: selectedItem.location.lng,
+    });
+  };
 
   useEffect(() => {
-    // Find the place in AllPlacesItem with the matching id
     const selectedPlace = AllPlacesItem.find(
       (place) => place.id === selectedPlaceId
     );
 
-    // Update the state with the selected place
     setSelectedItem(selectedPlace || {});
   }, [selectedPlaceId, AllPlacesItem]);
 
